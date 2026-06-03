@@ -2,14 +2,15 @@ import json
 import os
 import glob
 from pathlib import Path
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # ── Điền thông tin của bạn vào đây ──────────────────────────────────────────
 INBOX_PATH = ""   # VD: "/Users/you/Downloads/messages/inbox"
 MY_NAME = ""      # VD: "Nguyen Van A"
 # ─────────────────────────────────────────────────────────────────────────────
 
-genai.configure(api_key=os.environ.get("GEMINI_API_KEY", ""))
+_client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY", ""))
 
 
 def load_my_messages(inbox_path: str, my_name: str) -> list[str]:
@@ -65,8 +66,10 @@ Trả về JSON thuần (không markdown, không giải thích) với cấu trú
   "avoid": ["điều cần tránh 1", "điều cần tránh 2"]
 }}"""
 
-    model = genai.GenerativeModel(model_name="gemini-2.5-flash")
-    response = model.generate_content(prompt)
+    response = _client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt,
+    )
     text = response.text.strip()
 
     # Strip markdown fence nếu có
