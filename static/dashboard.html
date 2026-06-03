@@ -13,10 +13,18 @@ header h1{font-size:18px;font-weight:700}
 .dot{width:8px;height:8px;background:#42f563;border-radius:50%;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
+.tabs{display:flex;gap:0;background:#fff;border-bottom:2px solid #e4e6ea;padding:0 24px}
+.tab{padding:12px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:500;color:#65676b;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:#1877f2}
+.tab.active{color:#1877f2;border-bottom-color:#1877f2;font-weight:600}
+
+.pane{display:none}.pane.active{display:block}
+
+/* ── Monitor tab ─────────────────────────────── */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:18px 24px}
 .card{background:#fff;border-radius:12px;padding:18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
 .card .lbl{font-size:11px;color:#65676b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.card .val{font-size:30px;font-weight:700;color:#1877f2}
+.card .val{font-size:28px;font-weight:700;color:#1877f2}
 .card .sub{font-size:11px;color:#65676b;margin-top:4px}
 
 .main{display:grid;grid-template-columns:280px 1fr;gap:14px;padding:0 24px 16px}
@@ -25,14 +33,12 @@ header h1{font-size:18px;font-weight:700}
 .ph span{color:#65676b;font-size:11px;font-weight:400}
 .pb{overflow-y:auto;max-height:360px}
 
-.si{padding:10px 16px;border-bottom:1px solid #f0f2f5}
-.si:last-child{border-bottom:none}
+.si{padding:10px 16px;border-bottom:1px solid #f0f2f5}.si:last-child{border-bottom:none}
 .sid{font-weight:600;font-size:12px;color:#1877f2;font-family:monospace}
 .smeta{font-size:11px;color:#65676b;margin-top:2px}
 .slast{font-size:12px;color:#444;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.mi{padding:7px 16px;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #f7f8fa}
-.mi:last-child{border-bottom:none}
+.mi{padding:7px 16px;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #f7f8fa}.mi:last-child{border-bottom:none}
 .mtime{font-size:11px;color:#999;white-space:nowrap;min-width:48px;padding-top:2px}
 .mbubble{flex:1;min-width:0}
 .msender{font-size:11px;color:#65676b;margin-bottom:2px;font-family:monospace}
@@ -43,10 +49,8 @@ header h1{font-size:18px;font-weight:700}
 .chat-wrap{padding:0 24px 24px}
 .chat-title{padding:10px 0 8px;font-size:14px;font-weight:700}
 .chat-panel{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.chat-msgs{padding:14px;min-height:140px;max-height:240px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
-.cm{max-width:72%}
-.cm.user{align-self:flex-end}
-.cm.bot{align-self:flex-start}
+.chat-msgs{padding:14px;min-height:140px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
+.cm{max-width:72%}.cm.user{align-self:flex-end}.cm.bot{align-self:flex-start}
 .cm .b{padding:8px 14px;border-radius:18px;font-size:13px;line-height:1.45}
 .cm.user .b{background:#1877f2;color:#fff;border-bottom-right-radius:4px}
 .cm.bot .b{background:#f0f2f5;color:#1a1a2e;border-bottom-left-radius:4px}
@@ -59,6 +63,28 @@ header h1{font-size:18px;font-weight:700}
 .cin button:disabled{background:#bcc0c4;cursor:default}
 
 .empty{padding:28px 16px;text-align:center;color:#bcc0c4;font-size:13px}
+
+/* ── Config tab ──────────────────────────────── */
+.cfg{padding:20px 24px;max-width:900px}
+.cfg-section{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:20px;margin-bottom:16px}
+.cfg-section h3{font-size:14px;font-weight:700;margin-bottom:14px;color:#1877f2}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;font-weight:600;color:#444}
+.field input,.field textarea{border:1px solid #ddd;border-radius:8px;padding:8px 10px;font-size:13px;outline:none;font-family:inherit;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:#1877f2}
+.field textarea{min-height:70px}
+.field textarea.tall{min-height:140px}
+.field .hint{font-size:11px;color:#999}
+
+.save-bar{display:flex;align-items:center;gap:12px;padding:4px 0}
+.btn-save{background:#1877f2;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:14px;font-weight:600;cursor:pointer}
+.btn-save:hover{background:#1565d8}
+.btn-save:disabled{background:#bcc0c4;cursor:default}
+.toast{font-size:13px;padding:8px 14px;border-radius:8px;display:none}
+.toast.ok{background:#d4edda;color:#155724;display:block}
+.toast.err{background:#f8d7da;color:#721c24;display:block}
 </style>
 </head>
 <body>
@@ -68,126 +94,219 @@ header h1{font-size:18px;font-weight:700}
   <div class="live"><div class="dot"></div> LIVE</div>
 </header>
 
-<div class="stats">
-  <div class="card">
-    <div class="lbl">Phiên hội thoại</div>
-    <div class="val" id="s-sessions">—</div>
-    <div class="sub">người dùng</div>
+<div class="tabs">
+  <button class="tab active" onclick="showTab('monitor')">📊 Theo dõi</button>
+  <button class="tab" onclick="showTab('config')">⚙️ Cấu hình văn phong</button>
+</div>
+
+<!-- ══ TAB: MONITOR ════════════════════════════════ -->
+<div id="pane-monitor" class="pane active">
+  <div class="stats">
+    <div class="card"><div class="lbl">Phiên hội thoại</div><div class="val" id="s-sessions">—</div><div class="sub">người dùng</div></div>
+    <div class="card"><div class="lbl">Tin nhắn (phiên này)</div><div class="val" id="s-messages">—</div><div class="sub">kể từ lúc khởi động</div></div>
+    <div class="card"><div class="lbl">Trạng thái</div><div class="val" style="font-size:18px;padding-top:8px" id="s-status">—</div><div class="sub">bot đang hoạt động</div></div>
   </div>
-  <div class="card">
-    <div class="lbl">Tin nhắn (phiên này)</div>
-    <div class="val" id="s-messages">—</div>
-    <div class="sub">kể từ lúc khởi động</div>
+
+  <div class="main">
+    <div class="panel">
+      <div class="ph">Phiên hội thoại <span id="sess-count"></span></div>
+      <div class="pb" id="sess-list"><div class="empty">Chưa có hội thoại</div></div>
+    </div>
+    <div class="panel">
+      <div class="ph">Luồng tin nhắn <span>tự động làm mới 3s</span></div>
+      <div class="pb" id="msg-list"><div class="empty">Chưa có tin nhắn</div></div>
+    </div>
   </div>
-  <div class="card">
-    <div class="lbl">Trạng thái</div>
-    <div class="val" style="font-size:18px;padding-top:8px" id="s-status">—</div>
-    <div class="sub">bot đang hoạt động</div>
+
+  <div class="chat-wrap">
+    <div class="chat-title">💬 Test Chat với Bot</div>
+    <div class="chat-panel">
+      <div class="chat-msgs" id="chat-msgs">
+        <div class="cm bot"><div class="b">Xin chào! Nhập tin nhắn để test bot.</div></div>
+      </div>
+      <div class="cin">
+        <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
+        <button id="chat-btn" onclick="sendChat()">Gửi</button>
+      </div>
+    </div>
   </div>
 </div>
 
-<div class="main">
-  <div class="panel">
-    <div class="ph">Phiên hội thoại <span id="sess-count"></span></div>
-    <div class="pb" id="sess-list"><div class="empty">Chưa có hội thoại</div></div>
-  </div>
-  <div class="panel">
-    <div class="ph">Luồng tin nhắn <span>tự động làm mới 3s</span></div>
-    <div class="pb" id="msg-list"><div class="empty">Chưa có tin nhắn</div></div>
-  </div>
-</div>
+<!-- ══ TAB: CONFIG ═════════════════════════════════ -->
+<div id="pane-config" class="pane">
+  <div class="cfg">
 
-<div class="chat-wrap">
-  <div class="chat-title">💬 Test Chat với Bot</div>
-  <div class="chat-panel">
-    <div class="chat-msgs" id="chat-msgs">
-      <div class="cm bot"><div class="b">Xin chào! Nhập tin nhắn để test bot.</div></div>
+    <div class="cfg-section">
+      <h3>🏪 Thông tin shop</h3>
+      <div class="field full">
+        <label>Mô tả shop (tên, sản phẩm, chính sách, giá...)</label>
+        <textarea class="tall" id="shop_context" placeholder="VD: Shop bán áo thun unisex, giá 150k-250k, ship toàn quốc, đổi trả 7 ngày..."></textarea>
+      </div>
     </div>
-    <div class="cin">
-      <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
-      <button id="chat-btn" onclick="sendChat()">Gửi</button>
+
+    <div class="cfg-section">
+      <h3>✍️ Văn phong cơ bản</h3>
+      <div class="field-grid">
+        <div class="field"><label>Giọng điệu</label><input id="tone" placeholder="VD: thân thiện, vui vẻ, nhiệt tình"/></div>
+        <div class="field"><label>Độ dài câu</label><input id="sentence_length" placeholder="VD: ngắn, 1-2 câu mỗi tin"/></div>
+        <div class="field"><label>Dấu câu</label><input id="punctuation" placeholder="VD: hay dùng ..., ít dùng chấm than"/></div>
+        <div class="field"><label>Dùng emoji</label><input id="emoji_usage" placeholder="VD: thỉnh thoảng, 1-2 emoji mỗi tin"/></div>
+        <div class="field full"><label>Cách chào hỏi</label><input id="greeting_style" placeholder="VD: Dạ em chào anh/chị, bắt đầu bằng Dạ"/></div>
+        <div class="field full">
+          <label>Từ đệm hay dùng <span class="hint">(cách nhau bằng dấu phẩy)</span></label>
+          <input id="filler_words" placeholder="VD: dạ, ạ, nha, ơi"/>
+        </div>
+      </div>
     </div>
+
+    <div class="cfg-section">
+      <h3>💬 Cách xử lý tình huống</h3>
+      <div class="field-grid">
+        <div class="field"><label>Khi khách hỏi giá</label><textarea id="pat_price" placeholder="VD: Dạ giá sp này là X anh/chị ơi ạ 😊"></textarea></div>
+        <div class="field"><label>Khi hỏi còn hàng không</label><textarea id="pat_avail" placeholder="VD: Dạ bên em còn hàng ạ, anh/chị order được nha"></textarea></div>
+        <div class="field"><label>Khi khách phàn nàn</label><textarea id="pat_complaint" placeholder="VD: Dạ em xin lỗi vì sự bất tiện, em sẽ xử lý ngay ạ"></textarea></div>
+        <div class="field"><label>Câu hỏi chung</label><textarea id="pat_general" placeholder="VD: Dạ anh/chị cho em hỏi thêm để tư vấn kỹ hơn ạ"></textarea></div>
+      </div>
+    </div>
+
+    <div class="cfg-section">
+      <h3>📋 Tin nhắn mẫu <span style="font-weight:400;color:#65676b;font-size:12px">— mỗi dòng 1 tin, bot sẽ học phong cách từ đây</span></h3>
+      <div class="field full">
+        <textarea class="tall" id="raw_examples" style="min-height:200px" placeholder="Dán tin nhắn mẫu vào đây, mỗi dòng 1 tin&#10;VD:&#10;Dạ bên em có ạ nha 😊&#10;Giá sp này 199k anh ơi, ship miễn phí đơn từ 300k ạ&#10;Dạ để em check lại cho anh nhé..."></textarea>
+        <span class="hint">Có thể dán trực tiếp từ cuộc hội thoại Facebook — bot sẽ học văn phong từ những tin này</span>
+      </div>
+    </div>
+
+    <div class="cfg-section">
+      <h3>🚫 Tránh</h3>
+      <div class="field full">
+        <textarea id="avoid" placeholder="Mỗi dòng 1 điều cần tránh&#10;VD:&#10;Không dùng ngôn ngữ quá trang trọng&#10;Không viết câu quá dài&#10;Không dùng từ 'quý khách'"></textarea>
+        <span class="hint">Mỗi dòng 1 điều cần tránh</span>
+      </div>
+    </div>
+
+    <div class="save-bar">
+      <button class="btn-save" onclick="saveStyle()">💾 Lưu & Áp dụng ngay</button>
+      <div class="toast" id="toast"></div>
+    </div>
+
   </div>
 </div>
 
 <script>
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
+/* ── Tabs ─────────────────────────── */
+function showTab(name){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['monitor','config'][i]===name));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
+  document.getElementById('pane-'+name).classList.add('active');
+  if(name==='config') loadStyle();
+}
+
+/* ── Monitor ──────────────────────── */
 async function refresh(){
   try{
-    const [sr,mr,sesr]=await Promise.all([
-      fetch('/api/stats'),fetch('/api/messages'),fetch('/api/sessions')
-    ]);
+    const [sr,mr,sesr]=await Promise.all([fetch('/api/stats'),fetch('/api/messages'),fetch('/api/sessions')]);
     const s=await sr.json(),m=await mr.json(),ses=await sesr.json();
     document.getElementById('s-sessions').textContent=s.active_sessions;
     document.getElementById('s-messages').textContent=s.total_messages;
     document.getElementById('s-status').textContent='✅ Online';
-    renderSessions(ses);
-    renderMessages(m);
-  }catch(e){
-    document.getElementById('s-status').textContent='❌ Lỗi';
-  }
+    renderSessions(ses); renderMessages(m);
+  }catch(e){document.getElementById('s-status').textContent='❌ Lỗi';}
 }
 
 function renderSessions(list){
   const el=document.getElementById('sess-list');
   document.getElementById('sess-count').textContent=list.length+' phiên';
   if(!list.length){el.innerHTML='<div class="empty">Chưa có hội thoại</div>';return;}
-  el.innerHTML=list.map(s=>`
-    <div class="si">
-      <div class="sid">${esc(s.sender)}</div>
-      <div class="smeta">${s.msg_count} tin · ${s.last_seen||''}</div>
-      <div class="slast">${esc(s.last_msg||'')}</div>
-    </div>`).join('');
+  el.innerHTML=list.map(s=>`<div class="si"><div class="sid">${esc(s.sender)}</div><div class="smeta">${s.msg_count} tin · ${s.last_seen||''}</div><div class="slast">${esc(s.last_msg||'')}</div></div>`).join('');
 }
 
 function renderMessages(list){
   const el=document.getElementById('msg-list');
   if(!list.length){el.innerHTML='<div class="empty">Chưa có tin nhắn</div>';return;}
-  el.innerHTML=list.map(m=>`
-    <div class="mi ${esc(m.direction)}">
-      <div class="mtime">${esc(m.ts)}</div>
-      <div class="mbubble">
-        <div class="msender">${esc(m.sender)} ${m.direction==='in'?'→':'←'}</div>
-        <div class="mtext">${esc(m.text)}</div>
-      </div>
-    </div>`).join('');
+  el.innerHTML=list.map(m=>`<div class="mi ${esc(m.direction)}"><div class="mtime">${esc(m.ts)}</div><div class="mbubble"><div class="msender">${esc(m.sender)} ${m.direction==='in'?'→':'←'}</div><div class="mtext">${esc(m.text)}</div></div></div>`).join('');
 }
 
 async function sendChat(){
-  const inp=document.getElementById('chat-input');
-  const btn=document.getElementById('chat-btn');
-  const text=inp.value.trim();
-  if(!text)return;
-  addMsg(text,'user');
-  inp.value='';
-  btn.disabled=true;
+  const inp=document.getElementById('chat-input'),btn=document.getElementById('chat-btn');
+  const text=inp.value.trim(); if(!text)return;
+  addMsg(text,'user'); inp.value=''; btn.disabled=true;
   const thinking=addMsg('Đang trả lời...','bot thinking');
   try{
     const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
-    const data=await res.json();
-    thinking.remove();
-    addMsg(data.reply,'bot');
-  }catch(e){
-    thinking.remove();
-    addMsg('Lỗi kết nối.','bot');
-  }
+    const data=await res.json(); thinking.remove(); addMsg(data.reply,'bot');
+  }catch(e){thinking.remove();addMsg('Lỗi kết nối.','bot');}
   btn.disabled=false;
 }
 
 function addMsg(text,cls){
   const el=document.getElementById('chat-msgs');
-  const div=document.createElement('div');
-  div.className='cm '+cls;
-  div.innerHTML=`<div class="b">${esc(text)}</div>`;
-  el.appendChild(div);
-  el.scrollTop=el.scrollHeight;
-  return div;
+  const div=document.createElement('div'); div.className='cm '+cls;
+  div.innerHTML=`<div class="b">${esc(text)}</div>`; el.appendChild(div); el.scrollTop=el.scrollHeight; return div;
+}
+document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
+refresh(); setInterval(refresh,3000);
+
+/* ── Config ───────────────────────── */
+async function loadStyle(){
+  try{
+    const res=await fetch('/api/style');
+    const d=await res.json();
+    document.getElementById('shop_context').value=d.shop_context||'';
+    document.getElementById('tone').value=d.tone||'';
+    document.getElementById('sentence_length').value=d.sentence_length||'';
+    document.getElementById('punctuation').value=d.punctuation||'';
+    document.getElementById('emoji_usage').value=d.emoji_usage||'';
+    document.getElementById('filler_words').value=(d.filler_words||[]).join(', ');
+    document.getElementById('greeting_style').value=d.greeting_style||'';
+    const rp=d.response_patterns||{};
+    document.getElementById('pat_price').value=rp.when_asked_price||'';
+    document.getElementById('pat_avail').value=rp.when_asked_availability||'';
+    document.getElementById('pat_complaint').value=rp.when_customer_complaint||'';
+    document.getElementById('pat_general').value=rp.general_inquiry||'';
+    document.getElementById('raw_examples').value=(d.raw_examples||[]).join('\n');
+    document.getElementById('avoid').value=(d.avoid||[]).join('\n');
+  }catch(e){}
 }
 
-document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
-refresh();
-setInterval(refresh,3000);
+async function saveStyle(){
+  const btn=document.querySelector('.btn-save');
+  btn.disabled=true; btn.textContent='Đang lưu...';
+  const fillers=document.getElementById('filler_words').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const examples=document.getElementById('raw_examples').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const avoidList=document.getElementById('avoid').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const payload={
+    shop_context:document.getElementById('shop_context').value.trim(),
+    tone:document.getElementById('tone').value.trim(),
+    sentence_length:document.getElementById('sentence_length').value.trim(),
+    punctuation:document.getElementById('punctuation').value.trim(),
+    emoji_usage:document.getElementById('emoji_usage').value.trim(),
+    filler_words:fillers,
+    greeting_style:document.getElementById('greeting_style').value.trim(),
+    response_patterns:{
+      when_asked_price:document.getElementById('pat_price').value.trim(),
+      when_asked_availability:document.getElementById('pat_avail').value.trim(),
+      when_customer_complaint:document.getElementById('pat_complaint').value.trim(),
+      general_inquiry:document.getElementById('pat_general').value.trim(),
+    },
+    raw_examples:examples,
+    avoid:avoidList,
+  };
+  try{
+    const res=await fetch('/api/style',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+    if(res.ok){showToast('✅ Đã lưu và áp dụng ngay!','ok');}
+    else{showToast('❌ Lỗi khi lưu.','err');}
+  }catch(e){showToast('❌ Không kết nối được server.','err');}
+  btn.disabled=false; btn.textContent='💾 Lưu & Áp dụng ngay';
+}
+
+function showToast(msg,type){
+  const t=document.getElementById('toast');
+  t.className='toast '+type; t.textContent=msg;
+  setTimeout(()=>{ t.className='toast'; },3000);
+}
 </script>
 </body>
 </html>

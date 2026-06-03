@@ -1,11 +1,15 @@
 import os
+import json
 import asyncio
 import secrets
+from pathlib import Path
 from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.responses import PlainTextResponse, FileResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fb_client import send_message
 from ai_client import generate_reply
+import style_engine
+import ai_client as _ai
 import log_store
 
 app = FastAPI()
@@ -95,3 +99,21 @@ async def api_chat(request: Request, _: None = Depends(require_auth)):
         raise HTTPException(status_code=400, detail="message required")
     reply = await generate_reply("__dashboard__", message)
     return {"reply": reply}
+
+
+@app.get("/api/style")
+async def get_style(_: None = Depends(require_auth)):
+    path = Path("style_profile.json")
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    return {}
+
+
+@app.post("/api/style")
+async def save_style(request: Request, _: None = Depends(require_auth)):
+    body = await request.json()
+    path = Path("style_profile.json")
+    path.write_text(json.dumps(body, ensure_ascii=False, indent=2), encoding="utf-8")
+    style_engine.load_style_profile.cache_clear()
+    _ai.reload_model()
+    return {"status": "ok"}

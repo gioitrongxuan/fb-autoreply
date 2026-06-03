@@ -12,9 +12,13 @@ def load_style_profile() -> dict:
         return json.load(f)
 
 
-def build_system_prompt(shop_context: str = "") -> str:
+def build_system_prompt() -> str:
     profile = load_style_profile()
-    if not profile:
+    shop_context = profile.get("shop_context", "")
+
+    if not profile or all(
+        not profile.get(k) for k in ("tone", "greeting_style", "raw_examples")
+    ):
         base = "Bạn là nhân viên tư vấn bán hàng thân thiện, trả lời ngắn gọn và tự nhiên."
         if shop_context:
             base += f"\n\nThông tin shop:\n{shop_context}"
