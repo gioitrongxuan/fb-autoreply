@@ -185,6 +185,27 @@ header h1{font-size:18px;font-weight:700}
       </div>
     </div>
 
+    <div class="cfg-section">
+      <h3>⚡ Giới hạn token <span style="font-weight:400;color:#65676b;font-size:12px">— càng thấp càng tiết kiệm chi phí</span></h3>
+      <div class="field-grid">
+        <div class="field">
+          <label>Số token tối đa mỗi lần bot trả lời</label>
+          <input type="number" id="max_output_tokens" min="50" max="1000" placeholder="200"/>
+          <span class="hint">200 ≈ 2-3 câu ngắn · 500 ≈ đoạn văn · khuyến nghị: 150–250</span>
+        </div>
+        <div class="field">
+          <label>Số lượt hội thoại lưu trong bộ nhớ</label>
+          <input type="number" id="max_history_turns" min="1" max="50" placeholder="8"/>
+          <span class="hint">Mỗi lượt = 1 tin khách + 1 tin bot · khuyến nghị: 6–10</span>
+        </div>
+        <div class="field">
+          <label>Số tin nhắn mẫu đưa vào prompt</label>
+          <input type="number" id="max_examples_in_prompt" min="0" max="50" placeholder="10"/>
+          <span class="hint">Càng nhiều mẫu càng tốt phong cách nhưng tốn token hơn · khuyến nghị: 8–12</span>
+        </div>
+      </div>
+    </div>
+
     <div class="save-bar">
       <button class="btn-save" onclick="saveStyle()">💾 Lưu & Áp dụng ngay</button>
       <div class="toast" id="toast"></div>
@@ -268,6 +289,10 @@ async function loadStyle(){
     document.getElementById('pat_general').value=rp.general_inquiry||'';
     document.getElementById('raw_examples').value=(d.raw_examples||[]).join('\n');
     document.getElementById('avoid').value=(d.avoid||[]).join('\n');
+    const tl=d.token_limits||{};
+    document.getElementById('max_output_tokens').value=tl.max_output_tokens||200;
+    document.getElementById('max_history_turns').value=tl.max_history_turns||8;
+    document.getElementById('max_examples_in_prompt').value=tl.max_examples_in_prompt||10;
   }catch(e){}
 }
 
@@ -293,6 +318,11 @@ async function saveStyle(){
     },
     raw_examples:examples,
     avoid:avoidList,
+    token_limits:{
+      max_output_tokens:parseInt(document.getElementById('max_output_tokens').value)||200,
+      max_history_turns:parseInt(document.getElementById('max_history_turns').value)||8,
+      max_examples_in_prompt:parseInt(document.getElementById('max_examples_in_prompt').value)||10,
+    },
   };
   try{
     const res=await fetch('/api/style',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});

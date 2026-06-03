@@ -31,7 +31,9 @@ def build_system_prompt() -> str:
     filler_words = profile.get("filler_words", [])
     greeting_style = profile.get("greeting_style", "")
     response_patterns = profile.get("response_patterns", {})
-    raw_examples = profile.get("raw_examples", [])[:20]
+    limits = profile.get("token_limits", {})
+    max_examples = limits.get("max_examples_in_prompt", 10)
+    raw_examples = profile.get("raw_examples", [])[:max_examples]
     avoid = profile.get("avoid", [])
 
     filler_str = ", ".join(filler_words) if filler_words else "không có"
@@ -65,3 +67,13 @@ TRÁNH:
         prompt += f"\n\nTHÔNG TIN SHOP:\n{shop_context}"
 
     return prompt
+
+
+def get_token_limits() -> dict:
+    profile = load_style_profile()
+    limits = profile.get("token_limits", {})
+    return {
+        "max_output_tokens": int(limits.get("max_output_tokens", 200)),
+        "max_history_turns": int(limits.get("max_history_turns", 8)),
+        "max_examples_in_prompt": int(limits.get("max_examples_in_prompt", 10)),
+    }
