@@ -37,6 +37,11 @@ async def dashboard(_: None = Depends(require_auth)):
     return FileResponse("static/dashboard.html")
 
 
+@app.get("/privacy")
+async def privacy():
+    return FileResponse("static/privacy.html")
+
+
 @app.get("/webhook")
 async def verify_webhook(request: Request):
     params = request.query_params
