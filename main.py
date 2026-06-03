@@ -33,6 +33,11 @@ def require_auth(credentials: HTTPBasicCredentials = Depends(security)):
 
 
 @app.get("/")
+async def index():
+    return FileResponse("static/index.html")
+
+
+@app.get("/dashboard")
 async def dashboard(_: None = Depends(require_auth)):
     return FileResponse("static/dashboard.html")
 
