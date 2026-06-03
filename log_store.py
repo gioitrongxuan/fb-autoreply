@@ -42,12 +42,25 @@ def recent(limit: int = 100) -> list:
     ]
 
 
+def _mask(sid: str) -> str:
+    return sid[:4] + "***" if len(sid) > 4 else sid
+
+
 def sessions() -> list:
     with _lock:
         data = dict(_sessions)
     return [
-        {"sender": k[:4] + "***" if len(k) > 4 else k, **v}
+        {"sender": _mask(k), "raw_id": k, **v}
         for k, v in sorted(data.items(), key=lambda x: x[1]["last_seen"] or "", reverse=True)
+    ]
+
+
+def session_messages(raw_id: str, limit: int = 100) -> list:
+    with _lock:
+        entries = [e for e in _log if e.sender_id == raw_id]
+    return [
+        {"direction": e.direction, "text": e.text, "ts": e.ts.strftime("%H:%M:%S")}
+        for e in entries[-limit:]
     ]
 
 

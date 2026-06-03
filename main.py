@@ -116,6 +116,11 @@ async def api_sessions(_: None = Depends(require_auth)):
     return log_store.sessions()
 
 
+@app.get("/api/session/{raw_id}")
+async def api_session_messages(raw_id: str, _: None = Depends(require_auth)):
+    return log_store.session_messages(raw_id)
+
+
 @app.post("/api/chat")
 async def api_chat(request: Request, _: None = Depends(require_auth)):
     body = await request.json()

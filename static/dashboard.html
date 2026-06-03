@@ -6,105 +6,158 @@
 <title>FB AutoReply Dashboard</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a2e}
-header{background:#1877f2;color:#fff;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-header h1{font-size:18px;font-weight:700}
-.live{display:flex;align-items:center;gap:6px;font-size:13px}
-.dot{width:8px;height:8px;background:#42f563;border-radius:50%;animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f2f5;color:#1a1a2e;min-height:100vh}
 
-.tabs{display:flex;gap:0;background:#fff;border-bottom:2px solid #e4e6ea;padding:0 24px}
-.tab{padding:12px 20px;border:none;background:none;cursor:pointer;font-size:14px;font-weight:500;color:#65676b;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+/* ── Header ── */
+header{background:#1877f2;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+header h1{font-size:16px;font-weight:700}
+.live{display:flex;align-items:center;gap:5px;font-size:12px}
+.dot{width:7px;height:7px;background:#42f563;border-radius:50%;animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* ── Tabs ── */
+.tabs{display:flex;background:#fff;border-bottom:2px solid #e4e6ea;padding:0 12px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:11px 16px;border:none;background:none;cursor:pointer;font-size:13px;font-weight:500;color:#65676b;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:all .15s}
 .tab:hover{color:#1877f2}
 .tab.active{color:#1877f2;border-bottom-color:#1877f2;font-weight:600}
 
 .pane{display:none}.pane.active{display:block}
 
-/* ── Monitor tab ─────────────────────────────── */
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:18px 24px}
-.card{background:#fff;border-radius:12px;padding:18px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.card .lbl{font-size:11px;color:#65676b;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
-.card .val{font-size:28px;font-weight:700;color:#1877f2}
-.card .sub{font-size:11px;color:#65676b;margin-top:4px}
+/* ── Stats ── */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:12px 12px 0}
+.card{background:#fff;border-radius:10px;padding:12px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.card .lbl{font-size:10px;color:#65676b;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px}
+.card .val{font-size:22px;font-weight:700;color:#1877f2}
+.card .sub{font-size:10px;color:#65676b;margin-top:2px}
 
-.main{display:grid;grid-template-columns:280px 1fr;gap:14px;padding:0 24px 16px}
-.panel{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow:hidden}
-.ph{padding:12px 16px;border-bottom:1px solid #e4e6ea;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between}
+/* ── Main grid ── */
+.main{display:grid;grid-template-columns:260px 1fr;gap:10px;padding:10px 12px}
+.panel{background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden}
+.ph{padding:10px 14px;border-bottom:1px solid #e4e6ea;font-weight:600;font-size:13px;display:flex;align-items:center;justify-content:space-between}
 .ph span{color:#65676b;font-size:11px;font-weight:400}
-.pb{overflow-y:auto;max-height:360px}
+.pb{overflow-y:auto;max-height:340px}
 
-.si{padding:10px 16px;border-bottom:1px solid #f0f2f5}.si:last-child{border-bottom:none}
+/* ── Session list ── */
+.si{padding:10px 14px;border-bottom:1px solid #f0f2f5;cursor:pointer;transition:background .1s}
+.si:last-child{border-bottom:none}
+.si:hover{background:#f7f8fa}
+.si:active{background:#e7f3ff}
 .sid{font-weight:600;font-size:12px;color:#1877f2;font-family:monospace}
 .smeta{font-size:11px;color:#65676b;margin-top:2px}
 .slast{font-size:12px;color:#444;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-.mi{padding:7px 16px;display:flex;gap:10px;align-items:flex-start;border-bottom:1px solid #f7f8fa}.mi:last-child{border-bottom:none}
-.mtime{font-size:11px;color:#999;white-space:nowrap;min-width:48px;padding-top:2px}
+/* ── Message feed ── */
+.mi{padding:7px 14px;display:flex;gap:8px;align-items:flex-start;border-bottom:1px solid #f7f8fa}
+.mi:last-child{border-bottom:none}
+.mtime{font-size:11px;color:#999;white-space:nowrap;min-width:44px;padding-top:2px}
 .mbubble{flex:1;min-width:0}
 .msender{font-size:11px;color:#65676b;margin-bottom:2px;font-family:monospace}
-.mtext{font-size:13px;padding:5px 10px;border-radius:8px;display:inline-block;max-width:100%;word-break:break-word}
+.mtext{font-size:13px;padding:5px 9px;border-radius:8px;display:inline-block;max-width:100%;word-break:break-word}
 .in .mtext{background:#f0f2f5;color:#1a1a2e}
 .out .mtext{background:#e7f3ff;color:#1565d8}
 
-.chat-wrap{padding:0 24px 24px}
-.chat-title{padding:10px 0 8px;font-size:14px;font-weight:700}
-.chat-panel{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.chat-msgs{padding:14px;min-height:140px;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:7px}
-.cm{max-width:72%}.cm.user{align-self:flex-end}.cm.bot{align-self:flex-start}
-.cm .b{padding:8px 14px;border-radius:18px;font-size:13px;line-height:1.45}
-.cm.user .b{background:#1877f2;color:#fff;border-bottom-right-radius:4px}
-.cm.bot .b{background:#f0f2f5;color:#1a1a2e;border-bottom-left-radius:4px}
+/* ── Test chat ── */
+.chat-wrap{padding:0 12px 16px}
+.chat-title{padding:8px 0 6px;font-size:13px;font-weight:700}
+.chat-panel{background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chat-msgs{padding:12px;min-height:120px;max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.cm{max-width:75%}.cm.user{align-self:flex-end}.cm.bot{align-self:flex-start}
+.cm .b{padding:7px 12px;border-radius:16px;font-size:13px;line-height:1.4}
+.cm.user .b{background:#1877f2;color:#fff;border-bottom-right-radius:3px}
+.cm.bot .b{background:#f0f2f5;color:#1a1a2e;border-bottom-left-radius:3px}
 .cm.bot.thinking .b{color:#999;font-style:italic}
-.cin{display:flex;gap:8px;padding:10px 14px;border-top:1px solid #e4e6ea}
-.cin input{flex:1;border:1px solid #ddd;border-radius:20px;padding:7px 14px;font-size:13px;outline:none}
+.cin{display:flex;gap:8px;padding:8px 12px;border-top:1px solid #e4e6ea}
+.cin input{flex:1;border:1px solid #ddd;border-radius:18px;padding:7px 12px;font-size:13px;outline:none}
 .cin input:focus{border-color:#1877f2}
-.cin button{background:#1877f2;color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:13px;cursor:pointer;font-weight:600}
-.cin button:hover{background:#1565d8}
-.cin button:disabled{background:#bcc0c4;cursor:default}
+.cin button{background:#1877f2;color:#fff;border:none;border-radius:18px;padding:7px 16px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap}
+.cin button:disabled{background:#bcc0c4}
 
-.empty{padding:28px 16px;text-align:center;color:#bcc0c4;font-size:13px}
+.empty{padding:24px 14px;text-align:center;color:#bcc0c4;font-size:13px}
 
-/* ── Config tab ──────────────────────────────── */
-.cfg{padding:20px 24px;max-width:900px}
-.cfg-section{background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.08);padding:20px;margin-bottom:16px}
-.cfg-section h3{font-size:14px;font-weight:700;margin-bottom:14px;color:#1877f2}
-.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.field{display:flex;flex-direction:column;gap:4px}
+/* ── Session detail drawer ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:none}
+.overlay.show{display:block}
+.drawer{position:fixed;top:0;right:-100%;width:100%;max-width:420px;height:100dvh;background:#fff;z-index:201;display:flex;flex-direction:column;transition:right .28s cubic-bezier(.4,0,.2,1);box-shadow:-4px 0 20px rgba(0,0,0,.15)}
+.drawer.open{right:0}
+.dr-header{padding:12px 14px;border-bottom:1px solid #e4e6ea;display:flex;align-items:center;gap:10px;background:#fff;position:sticky;top:0}
+.dr-back{background:none;border:none;cursor:pointer;font-size:20px;color:#1877f2;padding:4px;line-height:1}
+.dr-title{font-weight:600;font-size:14px;flex:1}
+.dr-meta{font-size:11px;color:#65676b}
+.dr-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.dm{display:flex;flex-direction:column;max-width:82%}
+.dm.in{align-self:flex-start}
+.dm.out{align-self:flex-end}
+.dm .db{padding:8px 12px;border-radius:14px;font-size:13px;line-height:1.45;word-break:break-word}
+.dm.in .db{background:#f0f2f5;color:#1a1a2e;border-bottom-left-radius:3px}
+.dm.out .db{background:#1877f2;color:#fff;border-bottom-right-radius:3px}
+.dm .dt{font-size:10px;color:#bcc0c4;margin-top:3px;padding:0 4px}
+.dm.out .dt{text-align:right}
+.dr-loading{text-align:center;color:#bcc0c4;font-size:13px;padding:24px}
+
+/* ── Config tab ── */
+.cfg{padding:12px}
+.cfg-section{background:#fff;border-radius:10px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:14px;margin-bottom:12px}
+.cfg-section h3{font-size:13px;font-weight:700;margin-bottom:12px;color:#1877f2}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:3px}
 .field.full{grid-column:1/-1}
-.field label{font-size:12px;font-weight:600;color:#444}
-.field input,.field textarea{border:1px solid #ddd;border-radius:8px;padding:8px 10px;font-size:13px;outline:none;font-family:inherit;resize:vertical}
+.field label{font-size:11px;font-weight:600;color:#444}
+.field input,.field textarea{border:1px solid #ddd;border-radius:7px;padding:7px 9px;font-size:13px;outline:none;font-family:inherit;resize:vertical}
 .field input:focus,.field textarea:focus{border-color:#1877f2}
-.field textarea{min-height:70px}
-.field textarea.tall{min-height:140px}
-.field .hint{font-size:11px;color:#999}
-
-.save-bar{display:flex;align-items:center;gap:12px;padding:4px 0}
-.btn-save{background:#1877f2;color:#fff;border:none;border-radius:8px;padding:10px 28px;font-size:14px;font-weight:600;cursor:pointer}
-.btn-save:hover{background:#1565d8}
-.btn-save:disabled{background:#bcc0c4;cursor:default}
-.toast{font-size:13px;padding:8px 14px;border-radius:8px;display:none}
+.field textarea{min-height:64px}
+.field textarea.tall{min-height:130px}
+.field .hint{font-size:10px;color:#999}
+.save-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn-save{background:#1877f2;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-size:13px;font-weight:600;cursor:pointer;flex-shrink:0}
+.btn-save:disabled{background:#bcc0c4}
+.toast{font-size:12px;padding:7px 12px;border-radius:7px;display:none}
 .toast.ok{background:#d4edda;color:#155724;display:block}
 .toast.err{background:#f8d7da;color:#721c24;display:block}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .stats{grid-template-columns:repeat(3,1fr);gap:8px;padding:10px 10px 0}
+  .card{padding:10px 6px}
+  .card .val{font-size:20px}
+  .main{grid-template-columns:1fr;padding:8px 10px}
+  .pb{max-height:260px}
+  .chat-wrap{padding:0 10px 14px}
+  .cfg{padding:10px}
+  .field-grid{grid-template-columns:1fr}
+  .field.full{grid-column:1}
+}
+@media(max-width:480px){
+  header h1{font-size:14px}
+  .stats{gap:6px;padding:8px 8px 0}
+  .card .lbl{font-size:9px}
+  .card .val{font-size:18px}
+  .card .sub{display:none}
+  .main{padding:6px 8px}
+  .chat-wrap{padding:0 8px 12px}
+  .cfg{padding:8px}
+  .drawer{max-width:100%}
+}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>🤖 FB AutoReply Dashboard</h1>
+  <h1>🤖 FB AutoReply</h1>
   <div class="live"><div class="dot"></div> LIVE</div>
 </header>
 
 <div class="tabs">
   <button class="tab active" onclick="showTab('monitor')">📊 Theo dõi</button>
-  <button class="tab" onclick="showTab('config')">⚙️ Cấu hình văn phong</button>
+  <button class="tab" onclick="showTab('config')">⚙️ Cấu hình</button>
 </div>
 
-<!-- ══ TAB: MONITOR ════════════════════════════════ -->
+<!-- ══ MONITOR ══ -->
 <div id="pane-monitor" class="pane active">
   <div class="stats">
-    <div class="card"><div class="lbl">Phiên hội thoại</div><div class="val" id="s-sessions">—</div><div class="sub">người dùng</div></div>
-    <div class="card"><div class="lbl">Tin nhắn (phiên này)</div><div class="val" id="s-messages">—</div><div class="sub">kể từ lúc khởi động</div></div>
-    <div class="card"><div class="lbl">Trạng thái</div><div class="val" style="font-size:18px;padding-top:8px" id="s-status">—</div><div class="sub">bot đang hoạt động</div></div>
+    <div class="card"><div class="lbl">Phiên</div><div class="val" id="s-sessions">—</div><div class="sub">người dùng</div></div>
+    <div class="card"><div class="lbl">Tin nhắn</div><div class="val" id="s-messages">—</div><div class="sub">lượt</div></div>
+    <div class="card"><div class="lbl">Trạng thái</div><div class="val" style="font-size:16px;padding-top:6px" id="s-status">—</div><div class="sub">bot</div></div>
   </div>
 
   <div class="main">
@@ -113,16 +166,16 @@ header h1{font-size:18px;font-weight:700}
       <div class="pb" id="sess-list"><div class="empty">Chưa có hội thoại</div></div>
     </div>
     <div class="panel">
-      <div class="ph">Luồng tin nhắn <span>tự động làm mới 3s</span></div>
+      <div class="ph">Luồng tin nhắn <span>3s</span></div>
       <div class="pb" id="msg-list"><div class="empty">Chưa có tin nhắn</div></div>
     </div>
   </div>
 
   <div class="chat-wrap">
-    <div class="chat-title">💬 Test Chat với Bot</div>
+    <div class="chat-title">💬 Test Chat</div>
     <div class="chat-panel">
       <div class="chat-msgs" id="chat-msgs">
-        <div class="cm bot"><div class="b">Xin chào! Nhập tin nhắn để test bot.</div></div>
+        <div class="cm bot"><div class="b">Nhập tin nhắn để test bot.</div></div>
       </div>
       <div class="cin">
         <input type="text" id="chat-input" placeholder="Nhập tin nhắn..." />
@@ -132,149 +185,192 @@ header h1{font-size:18px;font-weight:700}
   </div>
 </div>
 
-<!-- ══ TAB: CONFIG ═════════════════════════════════ -->
+<!-- ══ CONFIG ══ -->
 <div id="pane-config" class="pane">
   <div class="cfg">
-
     <div class="cfg-section">
       <h3>🏪 Thông tin shop</h3>
       <div class="field full">
-        <label>Mô tả shop (tên, sản phẩm, chính sách, giá...)</label>
-        <textarea class="tall" id="shop_context" placeholder="VD: Shop bán áo thun unisex, giá 150k-250k, ship toàn quốc, đổi trả 7 ngày..."></textarea>
+        <textarea class="tall" id="shop_context" placeholder="Tên shop, sản phẩm, giá, chính sách giao hàng..."></textarea>
       </div>
     </div>
-
     <div class="cfg-section">
-      <h3>✍️ Văn phong cơ bản</h3>
+      <h3>✍️ Văn phong</h3>
       <div class="field-grid">
-        <div class="field"><label>Giọng điệu</label><input id="tone" placeholder="VD: thân thiện, vui vẻ, nhiệt tình"/></div>
-        <div class="field"><label>Độ dài câu</label><input id="sentence_length" placeholder="VD: ngắn, 1-2 câu mỗi tin"/></div>
-        <div class="field"><label>Dấu câu</label><input id="punctuation" placeholder="VD: hay dùng ..., ít dùng chấm than"/></div>
-        <div class="field"><label>Dùng emoji</label><input id="emoji_usage" placeholder="VD: thỉnh thoảng, 1-2 emoji mỗi tin"/></div>
-        <div class="field full"><label>Cách chào hỏi</label><input id="greeting_style" placeholder="VD: Dạ em chào anh/chị, bắt đầu bằng Dạ"/></div>
-        <div class="field full">
-          <label>Từ đệm hay dùng <span class="hint">(cách nhau bằng dấu phẩy)</span></label>
-          <input id="filler_words" placeholder="VD: dạ, ạ, nha, ơi"/>
-        </div>
+        <div class="field"><label>Giọng điệu</label><input id="tone" placeholder="thân thiện, vui vẻ"/></div>
+        <div class="field"><label>Độ dài câu</label><input id="sentence_length" placeholder="ngắn, 1-2 câu"/></div>
+        <div class="field"><label>Dấu câu</label><input id="punctuation" placeholder="hay dùng ..."/></div>
+        <div class="field"><label>Dùng emoji</label><input id="emoji_usage" placeholder="thỉnh thoảng"/></div>
+        <div class="field full"><label>Cách chào hỏi</label><input id="greeting_style" placeholder="Dạ em chào anh/chị"/></div>
+        <div class="field full"><label>Từ đệm <span class="hint">(phẩy)</span></label><input id="filler_words" placeholder="dạ, ạ, nha"/></div>
       </div>
     </div>
-
     <div class="cfg-section">
-      <h3>💬 Cách xử lý tình huống</h3>
+      <h3>💬 Xử lý tình huống</h3>
       <div class="field-grid">
-        <div class="field"><label>Khi khách hỏi giá</label><textarea id="pat_price" placeholder="VD: Dạ giá sp này là X anh/chị ơi ạ 😊"></textarea></div>
-        <div class="field"><label>Khi hỏi còn hàng không</label><textarea id="pat_avail" placeholder="VD: Dạ bên em còn hàng ạ, anh/chị order được nha"></textarea></div>
-        <div class="field"><label>Khi khách phàn nàn</label><textarea id="pat_complaint" placeholder="VD: Dạ em xin lỗi vì sự bất tiện, em sẽ xử lý ngay ạ"></textarea></div>
-        <div class="field"><label>Câu hỏi chung</label><textarea id="pat_general" placeholder="VD: Dạ anh/chị cho em hỏi thêm để tư vấn kỹ hơn ạ"></textarea></div>
+        <div class="field"><label>Hỏi giá</label><textarea id="pat_price"></textarea></div>
+        <div class="field"><label>Hỏi còn hàng</label><textarea id="pat_avail"></textarea></div>
+        <div class="field"><label>Phàn nàn</label><textarea id="pat_complaint"></textarea></div>
+        <div class="field"><label>Câu hỏi chung</label><textarea id="pat_general"></textarea></div>
       </div>
     </div>
-
     <div class="cfg-section">
-      <h3>📋 Tin nhắn mẫu <span style="font-weight:400;color:#65676b;font-size:12px">— mỗi dòng 1 tin, bot sẽ học phong cách từ đây</span></h3>
+      <h3>📋 Tin nhắn mẫu <span style="font-weight:400;color:#65676b;font-size:11px">— mỗi dòng 1 tin</span></h3>
       <div class="field full">
-        <textarea class="tall" id="raw_examples" style="min-height:200px" placeholder="Dán tin nhắn mẫu vào đây, mỗi dòng 1 tin&#10;VD:&#10;Dạ bên em có ạ nha 😊&#10;Giá sp này 199k anh ơi, ship miễn phí đơn từ 300k ạ&#10;Dạ để em check lại cho anh nhé..."></textarea>
-        <span class="hint">Có thể dán trực tiếp từ cuộc hội thoại Facebook — bot sẽ học văn phong từ những tin này</span>
+        <textarea class="tall" id="raw_examples" style="min-height:160px" placeholder="Dán tin nhắn mẫu, mỗi dòng 1 tin..."></textarea>
       </div>
     </div>
-
     <div class="cfg-section">
       <h3>🚫 Tránh</h3>
       <div class="field full">
-        <textarea id="avoid" placeholder="Mỗi dòng 1 điều cần tránh&#10;VD:&#10;Không dùng ngôn ngữ quá trang trọng&#10;Không viết câu quá dài&#10;Không dùng từ 'quý khách'"></textarea>
-        <span class="hint">Mỗi dòng 1 điều cần tránh</span>
+        <textarea id="avoid" placeholder="Mỗi dòng 1 điều cần tránh..."></textarea>
       </div>
     </div>
-
     <div class="cfg-section">
-      <h3>⚡ Giới hạn token <span style="font-weight:400;color:#65676b;font-size:12px">— càng thấp càng tiết kiệm chi phí</span></h3>
+      <h3>⚡ Giới hạn token</h3>
       <div class="field-grid">
         <div class="field">
-          <label>Số token tối đa mỗi lần bot trả lời</label>
+          <label>Token tối đa / trả lời</label>
           <input type="number" id="max_output_tokens" min="50" max="1000" placeholder="200"/>
-          <span class="hint">200 ≈ 2-3 câu ngắn · 500 ≈ đoạn văn · khuyến nghị: 150–250</span>
+          <span class="hint">150–250 cho tin nhắn ngắn</span>
         </div>
         <div class="field">
-          <label>Số lượt hội thoại lưu trong bộ nhớ</label>
+          <label>Lượt hội thoại lưu</label>
           <input type="number" id="max_history_turns" min="1" max="50" placeholder="8"/>
-          <span class="hint">Mỗi lượt = 1 tin khách + 1 tin bot · khuyến nghị: 6–10</span>
+          <span class="hint">6–10 khuyến nghị</span>
         </div>
         <div class="field">
-          <label>Số tin nhắn mẫu đưa vào prompt</label>
+          <label>Số tin mẫu trong prompt</label>
           <input type="number" id="max_examples_in_prompt" min="0" max="50" placeholder="10"/>
-          <span class="hint">Càng nhiều mẫu càng tốt phong cách nhưng tốn token hơn · khuyến nghị: 8–12</span>
+          <span class="hint">8–12 khuyến nghị</span>
         </div>
       </div>
     </div>
-
     <div class="save-bar">
       <button class="btn-save" onclick="saveStyle()">💾 Lưu & Áp dụng ngay</button>
       <div class="toast" id="toast"></div>
     </div>
-
   </div>
+</div>
+
+<!-- ══ SESSION DRAWER ══ -->
+<div class="overlay" id="overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+  <div class="dr-header">
+    <button class="dr-back" onclick="closeDrawer()">‹</button>
+    <div>
+      <div class="dr-title" id="dr-title">Hội thoại</div>
+      <div class="dr-meta" id="dr-meta"></div>
+    </div>
+  </div>
+  <div class="dr-msgs" id="dr-msgs"><div class="dr-loading">Đang tải...</div></div>
 </div>
 
 <script>
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 
-/* ── Tabs ─────────────────────────── */
+/* ── Tabs ── */
 function showTab(name){
   document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['monitor','config'][i]===name));
   document.querySelectorAll('.pane').forEach(p=>p.classList.remove('active'));
   document.getElementById('pane-'+name).classList.add('active');
-  if(name==='config') loadStyle();
+  if(name==='config')loadStyle();
 }
 
-/* ── Monitor ──────────────────────── */
+/* ── Monitor ── */
 async function refresh(){
   try{
-    const [sr,mr,sesr]=await Promise.all([fetch('/api/stats'),fetch('/api/messages'),fetch('/api/sessions')]);
+    const[sr,mr,sesr]=await Promise.all([fetch('/api/stats'),fetch('/api/messages'),fetch('/api/sessions')]);
     const s=await sr.json(),m=await mr.json(),ses=await sesr.json();
     document.getElementById('s-sessions').textContent=s.active_sessions;
     document.getElementById('s-messages').textContent=s.total_messages;
     document.getElementById('s-status').textContent='✅ Online';
-    renderSessions(ses); renderMessages(m);
-  }catch(e){document.getElementById('s-status').textContent='❌ Lỗi';}
+    renderSessions(ses);renderMessages(m);
+  }catch(e){document.getElementById('s-status').textContent='❌';}
 }
 
 function renderSessions(list){
   const el=document.getElementById('sess-list');
   document.getElementById('sess-count').textContent=list.length+' phiên';
   if(!list.length){el.innerHTML='<div class="empty">Chưa có hội thoại</div>';return;}
-  el.innerHTML=list.map(s=>`<div class="si"><div class="sid">${esc(s.sender)}</div><div class="smeta">${s.msg_count} tin · ${s.last_seen||''}</div><div class="slast">${esc(s.last_msg||'')}</div></div>`).join('');
+  el.innerHTML=list.map(s=>`
+    <div class="si" onclick="openDrawer('${esc(s.raw_id)}','${esc(s.sender)}',${s.msg_count},'${esc(s.last_seen||'')}')">
+      <div class="sid">${esc(s.sender)}</div>
+      <div class="smeta">${s.msg_count} tin · ${s.last_seen||''}</div>
+      <div class="slast">${esc(s.last_msg||'')}</div>
+    </div>`).join('');
 }
 
 function renderMessages(list){
   const el=document.getElementById('msg-list');
   if(!list.length){el.innerHTML='<div class="empty">Chưa có tin nhắn</div>';return;}
-  el.innerHTML=list.map(m=>`<div class="mi ${esc(m.direction)}"><div class="mtime">${esc(m.ts)}</div><div class="mbubble"><div class="msender">${esc(m.sender)} ${m.direction==='in'?'→':'←'}</div><div class="mtext">${esc(m.text)}</div></div></div>`).join('');
+  el.innerHTML=list.map(m=>`
+    <div class="mi ${esc(m.direction)}">
+      <div class="mtime">${esc(m.ts)}</div>
+      <div class="mbubble">
+        <div class="msender">${esc(m.sender)} ${m.direction==='in'?'→':'←'}</div>
+        <div class="mtext">${esc(m.text)}</div>
+      </div>
+    </div>`).join('');
 }
 
+/* ── Session Drawer ── */
+async function openDrawer(rawId, sender, count, lastSeen){
+  document.getElementById('dr-title').textContent='Phiên: '+sender;
+  document.getElementById('dr-meta').textContent=count+' tin · '+lastSeen;
+  document.getElementById('dr-msgs').innerHTML='<div class="dr-loading">Đang tải...</div>';
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('drawer').classList.add('open');
+  document.body.style.overflow='hidden';
+  try{
+    const res=await fetch('/api/session/'+encodeURIComponent(rawId));
+    const msgs=await res.json();
+    renderDrawerMsgs(msgs);
+  }catch(e){
+    document.getElementById('dr-msgs').innerHTML='<div class="dr-loading">Lỗi tải dữ liệu.</div>';
+  }
+}
+
+function renderDrawerMsgs(msgs){
+  const el=document.getElementById('dr-msgs');
+  if(!msgs.length){el.innerHTML='<div class="dr-loading">Chưa có tin nhắn.</div>';return;}
+  el.innerHTML=msgs.map(m=>`
+    <div class="dm ${esc(m.direction)}">
+      <div class="db">${esc(m.text)}</div>
+      <div class="dt">${esc(m.ts)}</div>
+    </div>`).join('');
+  el.scrollTop=el.scrollHeight;
+}
+
+function closeDrawer(){
+  document.getElementById('overlay').classList.remove('show');
+  document.getElementById('drawer').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+/* ── Test Chat ── */
 async function sendChat(){
   const inp=document.getElementById('chat-input'),btn=document.getElementById('chat-btn');
-  const text=inp.value.trim(); if(!text)return;
-  addMsg(text,'user'); inp.value=''; btn.disabled=true;
+  const text=inp.value.trim();if(!text)return;
+  addMsg(text,'user');inp.value='';btn.disabled=true;
   const thinking=addMsg('Đang trả lời...','bot thinking');
   try{
     const res=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:text})});
-    const data=await res.json(); thinking.remove(); addMsg(data.reply,'bot');
+    const data=await res.json();thinking.remove();addMsg(data.reply,'bot');
   }catch(e){thinking.remove();addMsg('Lỗi kết nối.','bot');}
   btn.disabled=false;
 }
-
 function addMsg(text,cls){
   const el=document.getElementById('chat-msgs');
-  const div=document.createElement('div'); div.className='cm '+cls;
-  div.innerHTML=`<div class="b">${esc(text)}</div>`; el.appendChild(div); el.scrollTop=el.scrollHeight; return div;
+  const div=document.createElement('div');div.className='cm '+cls;
+  div.innerHTML=`<div class="b">${esc(text)}</div>`;el.appendChild(div);el.scrollTop=el.scrollHeight;return div;
 }
 document.getElementById('chat-input').addEventListener('keydown',e=>{if(e.key==='Enter')sendChat();});
-refresh(); setInterval(refresh,3000);
 
-/* ── Config ───────────────────────── */
+/* ── Config ── */
 async function loadStyle(){
   try{
-    const res=await fetch('/api/style');
-    const d=await res.json();
+    const res=await fetch('/api/style');const d=await res.json();
     document.getElementById('shop_context').value=d.shop_context||'';
     document.getElementById('tone').value=d.tone||'';
     document.getElementById('sentence_length').value=d.sentence_length||'';
@@ -297,18 +393,14 @@ async function loadStyle(){
 }
 
 async function saveStyle(){
-  const btn=document.querySelector('.btn-save');
-  btn.disabled=true; btn.textContent='Đang lưu...';
-  const fillers=document.getElementById('filler_words').value.split(',').map(s=>s.trim()).filter(Boolean);
-  const examples=document.getElementById('raw_examples').value.split('\n').map(s=>s.trim()).filter(Boolean);
-  const avoidList=document.getElementById('avoid').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const btn=document.querySelector('.btn-save');btn.disabled=true;btn.textContent='Đang lưu...';
   const payload={
     shop_context:document.getElementById('shop_context').value.trim(),
     tone:document.getElementById('tone').value.trim(),
     sentence_length:document.getElementById('sentence_length').value.trim(),
     punctuation:document.getElementById('punctuation').value.trim(),
     emoji_usage:document.getElementById('emoji_usage').value.trim(),
-    filler_words:fillers,
+    filler_words:document.getElementById('filler_words').value.split(',').map(s=>s.trim()).filter(Boolean),
     greeting_style:document.getElementById('greeting_style').value.trim(),
     response_patterns:{
       when_asked_price:document.getElementById('pat_price').value.trim(),
@@ -316,8 +408,8 @@ async function saveStyle(){
       when_customer_complaint:document.getElementById('pat_complaint').value.trim(),
       general_inquiry:document.getElementById('pat_general').value.trim(),
     },
-    raw_examples:examples,
-    avoid:avoidList,
+    raw_examples:document.getElementById('raw_examples').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    avoid:document.getElementById('avoid').value.split('\n').map(s=>s.trim()).filter(Boolean),
     token_limits:{
       max_output_tokens:parseInt(document.getElementById('max_output_tokens').value)||200,
       max_history_turns:parseInt(document.getElementById('max_history_turns').value)||8,
@@ -326,17 +418,17 @@ async function saveStyle(){
   };
   try{
     const res=await fetch('/api/style',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-    if(res.ok){showToast('✅ Đã lưu và áp dụng ngay!','ok');}
-    else{showToast('❌ Lỗi khi lưu.','err');}
-  }catch(e){showToast('❌ Không kết nối được server.','err');}
-  btn.disabled=false; btn.textContent='💾 Lưu & Áp dụng ngay';
+    showToast(res.ok?'✅ Đã lưu và áp dụng!':'❌ Lỗi khi lưu.',res.ok?'ok':'err');
+  }catch(e){showToast('❌ Không kết nối được.','err');}
+  btn.disabled=false;btn.textContent='💾 Lưu & Áp dụng ngay';
 }
 
 function showToast(msg,type){
-  const t=document.getElementById('toast');
-  t.className='toast '+type; t.textContent=msg;
-  setTimeout(()=>{ t.className='toast'; },3000);
+  const t=document.getElementById('toast');t.className='toast '+type;t.textContent=msg;
+  setTimeout(()=>{t.className='toast';},3000);
 }
+
+refresh();setInterval(refresh,3000);
 </script>
 </body>
 </html>
