@@ -80,19 +80,19 @@ async def receive_message(request: Request):
 
 
 async def handle_reply(sender_id: str, text: str):
+    import logging
     log_store.record(sender_id, "in", text)
-    for attempt in range(3):
+    reply = "Dạ hiện tại em đang bận, anh/chị nhắn lại sau chút nhé ạ 🙏"
+    for attempt in range(4):
         try:
             reply = await generate_reply(sender_id, text)
             break
         except Exception as e:
             err = str(e)
-            if "503" in err or "UNAVAILABLE" in err:
-                if attempt < 2:
-                    await asyncio.sleep(3 * (attempt + 1))
-                    continue
-            reply = "Dạ hiện tại em đang bận, anh/chị nhắn lại sau chút nhé ạ 🙏"
-            break
+            logging.error(f"generate_reply attempt {attempt+1} failed: {err}")
+            if attempt < 3:
+                await asyncio.sleep(4 * (attempt + 1))
+                continue
     try:
         log_store.record(sender_id, "out", reply)
         await send_message(sender_id, reply)

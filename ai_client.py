@@ -21,7 +21,7 @@ def reload_model():
 async def generate_reply(sender_id: str, message: str) -> str:
     if sender_id not in chat_sessions:
         chat_sessions[sender_id] = _client.chats.create(
-            model="gemini-2.5-flash",
+            model="gemini-2.0-flash",
             config=types.GenerateContentConfig(
                 system_instruction=_system_instruction,
             ),
