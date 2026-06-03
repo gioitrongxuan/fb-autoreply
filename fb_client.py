@@ -14,4 +14,6 @@ async def send_message(recipient_id: str, text: str) -> None:
 
     async with httpx.AsyncClient(timeout=10) as client:
         resp = await client.post(GRAPH_API_URL, json=payload, params=params)
+        if not resp.is_success:
+            raise RuntimeError(f"Facebook API {resp.status_code}: {resp.text}")
         resp.raise_for_status()
