@@ -1,7 +1,9 @@
 import os
 import asyncio
-from fastapi import FastAPI, Request, HTTPException
+import secrets
+from fastapi import FastAPI, Request, HTTPException, Depends
 from fastapi.responses import PlainTextResponse, FileResponse
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fb_client import send_message
 from ai_client import generate_reply
 import log_store
@@ -9,10 +11,25 @@ import log_store
 app = FastAPI()
 
 VERIFY_TOKEN = os.environ.get("FB_VERIFY_TOKEN", "")
+DASHBOARD_USER = os.environ.get("DASHBOARD_USER", "admin")
+DASHBOARD_PASS = os.environ.get("DASHBOARD_PASS", "")
+
+security = HTTPBasic()
+
+
+def require_auth(credentials: HTTPBasicCredentials = Depends(security)):
+    ok_user = secrets.compare_digest(credentials.username.encode(), DASHBOARD_USER.encode())
+    ok_pass = secrets.compare_digest(credentials.password.encode(), DASHBOARD_PASS.encode())
+    if not (ok_user and ok_pass):
+        raise HTTPException(
+            status_code=401,
+            detail="Unauthorized",
+            headers={"WWW-Authenticate": "Basic"},
+        )
 
 
 @app.get("/")
-async def dashboard():
+async def dashboard(_: None = Depends(require_auth)):
     return FileResponse("static/dashboard.html")
 
 
@@ -56,22 +73,22 @@ async def handle_reply(sender_id: str, text: str):
 
 
 @app.get("/api/stats")
-async def api_stats():
+async def api_stats(_: None = Depends(require_auth)):
     return log_store.stats()
 
 
 @app.get("/api/messages")
-async def api_messages():
+async def api_messages(_: None = Depends(require_auth)):
     return log_store.recent()
 
 
 @app.get("/api/sessions")
-async def api_sessions():
+async def api_sessions(_: None = Depends(require_auth)):
     return log_store.sessions()
 
 
 @app.post("/api/chat")
-async def api_chat(request: Request):
+async def api_chat(request: Request, _: None = Depends(require_auth)):
     body = await request.json()
     message = body.get("message", "").strip()
     if not message:
